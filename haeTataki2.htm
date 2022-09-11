@@ -1,0 +1,189 @@
+<html>
+<head>
+<title>haeTataki2.htm</title>
+<script Language="JavaScript1.2">
+
+var used_browser = 1; /* 0: NN4, 1: NN6, 2:IE */
+var timer_id;
+var inv;
+//var x=100;
+//var y=200;
+
+var v;
+var NImg = 10;
+var xx = new Array(NImg);
+var yy = new Array(NImg);
+var vv = new Array(NImg);
+
+var NameImg ="mass";
+
+var istart=0;
+var Xsize= 512;
+var Ysize= 512;
+
+var iFrame=0; //表示回数
+var nFrame_end=100; //終了回数
+var iHit =0;
+
+var ave_V; // 平均初期速度
+var var_V; // 初期速度のばらつき
+
+var dv; // 移動の揺らぎ
+
+function move_img_Id(x, y, name)
+{
+document.getElementById(name).style.top = y;
+document.getElementById(name).style.left = x;
+}
+
+function move_img_all(){// 全ての画像を移動
+var ith;
+var IdName;
+for(ith=0;ith<NImg;ith++){
+IdName = NameImg + ith; // mass0, mass1
+move_img_Id(xx[ith],yy[ith],IdName);
+}
+}
+
+function start_pos(form)
+{
+iFrame= 0; //表示回数（時間）
+nFrame_end = 3000; // nFrame* 0.01 sec
+// 終了回数（時間）
+ave_V = 1; //平均初期速度
+var_V = 0.5; // 初期速度のばらつき
+
+dv= 1;
+
+iHit=0;
+
+Xsize = document.body.clientWidth; //windowの横幅
+Ysize = document.body.clientHeight;
+var i;
+for(i=0;i<NImg;i++) //画像の初期設定
+ reset_pos_img(i);
+move_img_all();
+timer_id = setInterval( 'const_motion()', 10);
+istart=1;
+}
+
+function const_motion()
+{
+var ith;
+var v;
+for(ith=0;ith<NImg;ith++){
+v = vv[ith];
+if(ith%4==0){
+xx[ith] += 0.3*v +dv*(Math.random()-0.5)*(Math.random()-0.5)*2; // ith番目のx座標
+yy[ith] += dv*(Math.random()-0.5)*3;
+igo_out = if_go_out(ith)
+//　範囲を超えたら初期位置にリセット
+}
+if(ith%4==1){
+xx[ith] += 0.3*v +dv*(Math.random()-0.5)*3; // ith番目のx座標
+yy[ith] += dv*(Math.random()-0.5)*2;
+igo_out = if_go_out(ith)
+//　範囲を超えたら初期位置にリセット
+}
+if(ith%4==2){
+xx[ith] += 0.3*v +dv*(Math.random()-0.5)*3.5; // ith番目のx座標
+yy[ith] += dv*(Math.random()-0.5)*5;
+igo_out = if_go_out(ith)
+//　範囲を超えたら初期位置にリセット
+}
+else{
+xx[ith] += 0.2*v +dv*(Math.random()-0.5)*4; // ith番目のx座標
+yy[ith] += dv*(Math.random()-0.5)*10; // ith番目のx座標
+
+igo_out = if_go_out(ith)
+}
+if(igo_out)
+
+reset_pos_img(ith);
+
+}
+move_img_all();
+iFrame++;
+if(iFrame>nFrame_end){
+clearInterval(timer_id);
+alert("iHit = "+iHit);
+istart=0;
+}
+}
+
+function if_go_out(i){// i番目の画像が範囲を超えたら true
+//var th = 50;
+
+//if(xx[i] > Xsize -th ) return true;
+if(xx[i] > Xsize ) return true;
+if(yy[i]<0 || yy[i]> Ysize) return true;
+return false;
+}
+
+function reset_pos_img(i)
+// i番目の画像の初期設定
+{
+xx[i]= 0; 
+yy[i]= Ysize * Math.random(); // ウィンドウサイズ*乱数
+vv[i] = ave_V + var_V *(Math.random() -0.5); //平均ave_V 乱数
+}
+
+function click_alert(i){                                                                     //alert
+
+ if(istart==0) //動いてなければ何もしない
+return;
+//alert("clicked! "+i);
+
+iHit++;
+
+//i.fld1.value=iHit;
+reset_pos_img(i);
+//<input TYPE="text" NAME="fld1" >
+}
+
+// -->
+</SCRIPT>
+</head>
+<body>
+<big> 画像をクリック 
+<br>
+<form NAME ="inputFld">
+ 
+<br>
+<input TYPE="button" id= "Bstart" NAME="btn1" VALUE="Start"onClick="start_pos(this.form)">
+</form>
+</big>
+<div id= "mass0" style="position:absolute; top:100px" >
+<img SRC="ka.jpg" onclick="click_alert(0);">
+</div>
+<div id= "mass1" style="position:absolute; top:150px; visibility:visible" >
+<img SRC="ka.jpg" onclick="click_alert(1);">
+</div>
+<div id= "mass2" style="position:absolute; top:200px" >
+<img SRC="ka.jpg" onclick="click_alert(2);">
+</div>
+<div id= "mass3" style="position:absolute; top:250px">
+<img SRC="ka.jpg" onclick="click_alert(3);">
+</div>
+<div id= "mass4" style="position:absolute; top:100px;left:100px" >
+<img SRC="ka.jpg" onclick="click_alert(4);">
+</div>
+<div id= "mass5" style="position:absolute; top:150px;left:100px" >
+<img SRC="ka.jpg" onclick="click_alert(5);">
+</div>
+<div id= "mass6" style="position:absolute; top:200px;left:100px" >
+<img SRC="ka.jpg" onclick="click_alert(6);">
+</div>
+<div id= "mass7" style="position:absolute; top:250px;left:100px">
+<img SRC="ka.jpg" onclick="click_alert(7);">
+</div>
+<div id= "mass8" style="position:absolute; top:300px;left:100px" >
+<img SRC="ka.jpg" onclick="click_alert(8);">
+</div>
+<div id= "mass9" style="position:absolute; top:300px">
+<img SRC="ka.jpg" onclick="click_alert(9);">
+
+
+</div>
+</body>
+</html>
